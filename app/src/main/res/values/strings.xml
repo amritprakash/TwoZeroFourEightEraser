@@ -22,8 +22,6 @@
     <!-- Trash -->
     <string name="tiles_are_not_enough_to_remove">Tiles are very few to erase!</string>
 
-    <!-- Deleting Selection -->
-
     <!-- Menu Items -->
     <string name="achievements">Achievements</string>
     <string name="leaderboards">Leaderboards</string>
@@ -31,24 +29,6 @@
     <string name="other_games">Other games</string>
     <string name="rate_us">Rate 2048</string>
     <string name="share_2048">Share with friends</string>
-    <string name="sign_out">Sign out</string>
-    <string name="try_again">Try again a few seconds later!</string>
 
-    <!-- Color -->
-    <string name="color_picker">Color picker</string>
-    <string name="red">Red:</string>
-    <string name="green">Green:</string>
-    <string name="blue">Blue:</string>
-
-    <!-- Coloring -->
-    <string name="background_color_changed">Background color has been changed</string>
-    <string name="background_color_has_been_reset_to_default">Background color has been reset to default</string>
-    <string name="accept_color">Accept</string>
-    <string name="dont_accept_color">Cancel</string>
-    <string name="reset_to_default_color">Default</string>
-
-    <!-- Contact with Email -->
-
-    <!-- new features -->
     <string name="_app_name">2048 Eraser</string>
 </resources>

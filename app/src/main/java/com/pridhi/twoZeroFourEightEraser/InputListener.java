@@ -27,7 +27,7 @@ class InputListener implements View.OnTouchListener {
     boolean goneFlag = false;
 
     final Handler handler = new Handler();
-    Runnable mLongPressed = new Runnable() {
+    final Runnable mLongPressed = new Runnable() {
         public void run() {
             goneFlag = true;
             mView.game.removeTile(x, y);
@@ -134,7 +134,7 @@ class InputListener implements View.OnTouchListener {
                                     MainActivity.mRewardDeletes = 2;
                                     MainActivity.mRewardDeletingSelectionAmounts = 3;
 
-                                    mView.game.newGame(true);
+                                    mView.game.restartGame();
                                     mView.game.canUndo = false;
                                 })
                                 .setNegativeButton(R.string.continue_game, null)

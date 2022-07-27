@@ -4,12 +4,14 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
+import com.google.android.gms.games.PlayGamesSdk;
+
 
 public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        PlayGamesSdk.initialize(this);
         // The following is a check to make sure the plugin boots us out when we're in
         // buddybuild processes, crash if not
         int processId = android.os.Process.myPid();

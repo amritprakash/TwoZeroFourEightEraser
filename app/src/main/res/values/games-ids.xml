@@ -2,7 +2,7 @@
 
 <resources>
     <!--app_id-->
-    <string name="app_id" translatable="false">337921029381</string>
+    <string name="game_services_project_id" translatable="false">337921029381</string>
     <!--package_name-->
     <!--achievement Senior-->
     <string name="achievement_senior" translatable="false">CgkIheqm7eoJEAIQBw</string>

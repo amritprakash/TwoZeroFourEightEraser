@@ -4,11 +4,7 @@
 
     <!-- For Google Play Services -->
     <string name="achievements_exception" translatable="false">There was an issue communicating with achievements.</string>
-    <string name="leaderboards_exception" translatable="false">There was an issue communicating with leaderboards.</string>
     <string name="players_exception" translatable="false">There was an issue communicating with players.</string>
-    <string name="status_exception_error" translatable="false">%1$s (status %2$d). %3$s.</string>
-
-    <string name="signin_other_error" translatable="false">There was an issue with sign in.  Please try again later.</string>
 
     <!-- Sizes -->
     <string name="size_4x4" translatable="false">4x4</string>

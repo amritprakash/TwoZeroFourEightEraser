@@ -1,8 +1,6 @@
 package com.pridhi.twoZeroFourEightEraser;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,26 +17,14 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.games.AchievementsClient;
-import com.google.android.gms.games.EventsClient;
-import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesSignInClient;
 import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.PlayGames;
-import com.google.android.gms.games.PlayersClient;
-import com.google.android.gms.games.event.Event;
-import com.google.android.gms.games.event.EventBuffer;
-import com.google.android.gms.tasks.Task;
 
 import java.util.Arrays;
 
@@ -62,34 +48,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String UNDO_GAME_STATE = "undo game state";
     private static final String REWARD_DELETE_SELECTION = "reward delete selection amounts";
 
-
     private MainView view;
 
-    private AdView mAdView;
     public InterstitialAd mInterstitialAd;
     private RewardedAd mRewardedAd;
 
-
-    // Google Play Games Services:
-    public GoogleSignInClient mGoogleSignInClient;  // Client used to sign in with Google APIs
-
-    // Client variables
-    public AchievementsClient mAchievementsClient;
-    public LeaderboardsClient mLeaderboardsClient;
-    public EventsClient mEventsClient;
-    public PlayersClient mPlayersClient;
-
-    // request codes we use when invoking an external activity
-    public static final int RC_SIGN_IN = 9001;
-
-    // achievements and scores we're pending to push to the cloud
-    // (waiting for the user to sign in, for instance)
     private static long mHighScore4x4;
     private static long mHighScore5x5;
     private static long mHighScore6x6;
 
-    private boolean mAchievementSenior;
-    private boolean mAchievementFresher;
     private boolean mAchievement8192At4x4;
     private boolean mAchievement4096At4x4;
     private boolean mAchievement2048At4x4;
@@ -99,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean mAchievement2048At5x5;
     private boolean mAchievement2048At6x6;
 
+    public GamesSignInClient mGamesSignInClient;
+    private boolean isAuthenticated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
         FrameLayout frameLayout = findViewById(R.id.game_frame_layout);
         view = new MainView(this, this);
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        view.hasSaveState = settings.getBoolean("save_state", false);
 
         if (savedInstanceState != null)
             if (savedInstanceState.getBoolean("hasState"))
@@ -123,16 +89,15 @@ public class MainActivity extends AppCompatActivity {
         MobileAds.initialize(this, initializationStatus -> {
         });
 
-        mAdView = findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         loadInterstitial();
         loadRewarded();
-        mGoogleSignInClient = GoogleSignIn.getClient(this,
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).build());
-
-        if (!isSignedIn())
-            startSignInIntent();
+        mGamesSignInClient = PlayGames.getGamesSignInClient(this);
+        mGamesSignInClient.isAuthenticated().addOnCompleteListener(isAuthenticatedTask -> isAuthenticated =
+                (isAuthenticatedTask.isSuccessful() &&
+                        isAuthenticatedTask.getResult().isAuthenticated()));
     }
 
     private void loadInterstitial() {
@@ -256,24 +221,16 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         save();
 
-        if (isSignedIn()) {
-            pushAccomplishments();
-            updateLeaderboards();
-        }
+        pushAccomplishments();
+        updateLeaderboards();
     }
 
     protected void onResume() {
         super.onResume();
         load();
 
-        // Since the state of the signed in user can change when the activity is not active
-        // it is recommended to try and sign in silently from when the app resumes.
-        signInSilently();
-
-        if (isSignedIn()) {
-            pushAccomplishments();
-            updateLeaderboards();
-        }
+        pushAccomplishments();
+        updateLeaderboards();
     }
 
     private void save() {
@@ -362,82 +319,49 @@ public class MainActivity extends AppCompatActivity {
         view.game.lastGameState = settings.getInt(UNDO_GAME_STATE + rows, view.game.lastGameState);
     }
 
-    public void loadAndPrintEvents() {
-        mEventsClient.load(true).addOnSuccessListener(eventBufferAnnotatedData -> {
-                    EventBuffer eventBuffer = eventBufferAnnotatedData.get();
-
-                    int count = 0;
-                    if (eventBuffer != null)
-                        count = eventBuffer.getCount();
-
-                    for (int i = 0; i < count; i++) {
-                        Event event = eventBuffer.get(i);
-                        Log.i(TAG, "event: "
-                                + event.getName()
-                                + " -> "
-                                + event.getValue());
-                    }
-                })
-                .addOnFailureListener(e -> handleException(e, getString(R.string.achievements_exception)));
-    }
-
-    public void signInSilently() {
-        mGoogleSignInClient.silentSignIn().addOnCompleteListener(this, task -> {
-            if (task.isSuccessful())
-                onConnected(task.getResult());
-            else
-                onDisconnected();
-        });
-    }
-
-    public void handleException(Exception e, String details) {
-        Log.d("TAG", e.getMessage() + details);
-
-    }
-
     public void pushAccomplishments() {
-        if (!isSignedIn())
-            return; // can't push to the cloud, try again later
-
+        if (!isAuthenticated) {
+            return;
+        }
         try {
-
+            AchievementsClient achievementsClient = PlayGames.getAchievementsClient(this);
             if (mAchievement8192At4x4) {
-                mAchievementsClient.unlock(getString(R.string.achievement_8192_at_4x4));
+                achievementsClient.unlock(getString(R.string.achievement_8192_at_4x4));
                 mAchievement8192At4x4 = false;
             }
 
             if (mAchievement4096At4x4) {
-                mAchievementsClient.unlock(getString(R.string.achievement_4096_at_4x4));
+                achievementsClient.unlock(getString(R.string.achievement_4096_at_4x4));
                 mAchievement4096At4x4 = false;
             }
 
             if (mAchievement2048At4x4) {
-                mAchievementsClient.unlock(getString(R.string.achievement_2048_at_4x4));
+                achievementsClient.unlock(getString(R.string.achievement_2048_at_4x4));
                 mAchievement2048At4x4 = false;
             }
 
             if (mAchievement1024At4x4) {
-                mAchievementsClient.unlock(getString(R.string.achievement_1024_at_4x4));
+                achievementsClient.unlock(getString(R.string.achievement_1024_at_4x4));
                 mAchievement1024At4x4 = false;
             }
 
             if (mAchievement8192At5x5) {
-                mAchievementsClient.unlock(getString(R.string.achievement_8192_at_5x5));
+                achievementsClient.unlock(getString(R.string.achievement_8192_at_5x5));
                 mAchievement8192At5x5 = false;
             }
 
             if (mAchievement4096At5x5) {
-                mAchievementsClient.unlock(getString(R.string.achievement_4096_at_5x5));
+                achievementsClient.unlock(getString(R.string.achievement_4096_at_5x5));
                 mAchievement4096At5x5 = false;
             }
 
             if (mAchievement2048At5x5) {
-                mAchievementsClient.unlock(getString(R.string.achievement_2048_at_5x5));
+                achievementsClient.unlock(getString(R.string.achievement_2048_at_5x5));
                 mAchievement2048At5x5 = false;
             }
 
             if (mAchievement2048At6x6) {
-                mAchievementsClient.unlock(getString(R.string.achievement_2048_at_6x6));
+                achievementsClient.unlock(getString(R.string.achievement_2048_at_6x6));
                 mAchievement2048At6x6 = false;
             }
         } catch (Exception e) {
@@ -446,85 +370,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateLeaderboards() {
-        if (!isSignedIn())
-            return; // can't push to the cloud, try again later
-
+        if (!isAuthenticated) {
+            return;
+        }
         try {
+            LeaderboardsClient leaderboardsClient = PlayGames.getLeaderboardsClient(this);
             if (mHighScore4x4 >= 0) {
-                mLeaderboardsClient.submitScore(getString(R.string.leaderboard_4x4), mHighScore4x4);
+                leaderboardsClient.submitScore(getString(R.string.leaderboard_4x4), mHighScore4x4);
                 mHighScore4x4 = -1;
             }
 
             if (mHighScore5x5 >= 0) {
-                mLeaderboardsClient.submitScore(getString(R.string.leaderboard_5x5), mHighScore5x5);
+                leaderboardsClient.submitScore(getString(R.string.leaderboard_5x5), mHighScore5x5);
                 mHighScore5x5 = -1;
             }
 
             if (mHighScore6x6 >= 0) {
-                mLeaderboardsClient.submitScore(getString(R.string.leaderboard_6x6), mHighScore6x6);
+                leaderboardsClient.submitScore(getString(R.string.leaderboard_6x6), mHighScore6x6);
                 mHighScore6x6 = -1;
             }
         } catch (Exception e) {
             Log.e("updateLeaderboards", Arrays.toString(e.getStackTrace()));
-        }
-    }
-
-    public void onConnected(GoogleSignInAccount googleSignInAccount) {
-        mAchievementsClient = PlayGames.getAchievementsClient(this);
-        mLeaderboardsClient = PlayGames.getLeaderboardsClient(this);
-        mEventsClient = PlayGames.getEventsClient(this);
-        mPlayersClient = PlayGames.getPlayersClient(this);
-
-        mPlayersClient.getCurrentPlayer().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Exception e = task.getException();
-                if (e != null) {
-                    handleException(e, getString(R.string.players_exception));
-                }
-            }
-        });
-
-        // if we have accomplishments to push, push them
-        if (!isEmptyAchievementsOrLeaderboards()) {
-            pushAccomplishments();
-            updateLeaderboards();
-        }
-        loadAndPrintEvents();
-    }
-
-    public void onDisconnected() {
-        mAchievementsClient = null;
-        mLeaderboardsClient = null;
-        mPlayersClient = null;
-    }
-
-    private void startSignInIntent() {
-        startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
-    }
-
-    private boolean isSignedIn() {
-        return GoogleSignIn.getLastSignedInAccount(this) != null;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
-
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                onConnected(account);
-            } catch (ApiException apiException) {
-                String message = apiException.getMessage();
-                if (message == null || message.isEmpty())
-                    message = getString(R.string.signin_other_error);
-
-                onDisconnected();
-
-                new AlertDialog.Builder(this).setMessage(message)
-                        .setNeutralButton(android.R.string.ok, null).show();
-            }
         }
     }
 
@@ -551,16 +417,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void incrementGameCountAchievements() {
-        if (!isSignedIn()) {
-            return;
+        if (isAuthenticated) {
+            PlayGames.getAchievementsClient(this).increment(getString(R.string.achievement_senior), 1);
+            PlayGames.getAchievementsClient(this).increment(getString(R.string.achievement_fresher), 1);
         }
-        mAchievementsClient.increment(getString(R.string.achievement_senior), 1);
-        mAchievementsClient.increment(getString(R.string.achievement_fresher), 1);
     }
 
-    private boolean isEmptyAchievementsOrLeaderboards() {
-        return !mAchievement1024At4x4 || !mAchievement2048At4x4
-                || !mAchievement4096At4x4 || !mAchievement8192At4x4 || !mAchievement2048At5x5 || !mAchievement4096At5x5
-                || !mAchievement8192At5x5 || mAchievement2048At6x6 || mHighScore4x4 < 0 || mHighScore5x5 < 0 || mHighScore6x6 < 0;
-    }
 }

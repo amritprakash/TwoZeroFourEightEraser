@@ -49,7 +49,7 @@ public class MainGame {
         endingMaxValue = (int) Math.pow(2, view.numCellTypes - 1);
     }
 
-    public void newGame(boolean restart) {
+    public void restartGame() {
         if (newGameCount++ % 3 == 0) {
             mView.mActivity.showInterstitial();
         }
