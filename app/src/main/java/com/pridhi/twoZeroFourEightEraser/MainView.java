@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.content.res.AppCompatResources;
+
 import java.util.ArrayList;
 
 public class MainView extends View
@@ -35,9 +37,7 @@ public class MainView extends View
     public int sYIcons;
     public int sXNewGame;
     public int sXUndo;
-    public int sXRemoveTiles;       // trsh button
-    public int sXSave;   // save the current board
-    public int sXLoad;   // load previous saved board
+    public int sXHome;
     public int iconSize;
     //Misc
     boolean refreshLastTime = true;
@@ -101,6 +101,7 @@ public class MainView extends View
             Log.e(TAG, "Error getting assets?", e);
         }
         setOnTouchListener(new InputListener(this));
+
         game.newGame();
     }
 
@@ -146,6 +147,7 @@ public class MainView extends View
         drawScoreText(canvas);
         drawCells(canvas);
 
+        drawUndoButton(canvas, game.canUndo());
         if (!game.canContinue())
             drawEndlessText(canvas);
 
@@ -182,10 +184,9 @@ public class MainView extends View
         createOverlays();
     }
 
-    @SuppressWarnings("deprecation")
     private Drawable getDrawable(int resId)
     {
-        return getResources().getDrawable(resId);
+        return AppCompatResources.getDrawable(mContext, resId);
     }
 
     private void drawDrawable(Canvas canvas, Drawable draw, int startingX, int startingY, int endingX, int endingY)
@@ -247,60 +248,6 @@ public class MainView extends View
         canvas.drawText(String.valueOf(game.score), sXScore + textMiddleScore, bodyStartYAll, paint);
     }
 
-    public void drawLoadButton(Canvas canvas, boolean lightUp)
-    {
-        if(lightUp)
-            drawDrawable(canvas, lightUpRectangle, sXLoad, sYIcons,
-                    sXLoad + iconSize,
-                    sYIcons + iconSize);
-        else
-            drawDrawable(canvas, backgroundRectangle, sXLoad, sYIcons,
-                    sXLoad + iconSize,
-                    sYIcons + iconSize);
-
-        drawDrawable(canvas, getDrawable(R.drawable.ic_action_load),
-                sXLoad + iconPaddingSize,
-                sYIcons + iconPaddingSize,
-                sXLoad + iconSize - iconPaddingSize,
-                sYIcons + iconSize - iconPaddingSize);
-    }
-
-    public void drawSaveButton(Canvas canvas, boolean lightUp)
-    {
-        if(lightUp)
-            drawDrawable(canvas, lightUpRectangle, sXSave, sYIcons,
-                    sXSave + iconSize,
-                    sYIcons + iconSize);
-        else
-            drawDrawable(canvas, backgroundRectangle, sXSave, sYIcons,
-                    sXSave + iconSize,
-                    sYIcons + iconSize);
-
-        drawDrawable(canvas, getDrawable(R.drawable.ic_action_save),
-                sXSave + iconPaddingSize,
-                sYIcons + iconPaddingSize,
-                sXSave + iconSize - iconPaddingSize,
-                sYIcons + iconSize - iconPaddingSize);
-    }
-
-    private void drawTrashButton(Canvas canvas, boolean lightUp)
-    {
-        if (lightUp)
-            drawDrawable(canvas, lightUpRectangle, sXRemoveTiles, sYIcons,
-                    sXRemoveTiles + iconSize,
-                    sYIcons + iconSize);
-        else
-            drawDrawable(canvas, backgroundRectangle, sXRemoveTiles, sYIcons,
-                    sXRemoveTiles + iconSize,
-                    sYIcons + iconSize);
-
-        drawDrawable(canvas, getDrawable(R.drawable.ic_action_trash),
-                sXRemoveTiles + iconPaddingSize,
-                sYIcons + iconPaddingSize,
-                sXRemoveTiles + iconSize - iconPaddingSize,
-                sYIcons + iconSize - iconPaddingSize);
-    }
-
     private void drawNewGameButton(Canvas canvas, boolean lightUp)
     {
         if (lightUp)
@@ -316,6 +263,18 @@ public class MainView extends View
                 sXNewGame + iconPaddingSize,
                 sYIcons + iconPaddingSize,
                 sXNewGame + iconSize - iconPaddingSize,
+                sYIcons + iconSize - iconPaddingSize);
+    }
+
+    private void drawHomeButton(Canvas canvas) {
+        drawDrawable(canvas, lightUpRectangle, sXHome, sYIcons,
+                sXHome + iconSize,
+                sYIcons + iconSize);
+
+        drawDrawable(canvas, getDrawable(R.drawable.ic_home),
+                sXHome + iconPaddingSize,
+                sYIcons + iconPaddingSize,
+                sXHome + iconSize - iconPaddingSize,
                 sYIcons + iconSize - iconPaddingSize);
     }
 
@@ -369,6 +328,23 @@ public class MainView extends View
 
                 drawDrawable(canvas, backgroundCell, sX, sY, eX, eY);
             }
+    }
+
+    public Tile findLongClickedTile(float x, float y) {
+        final int ROWS = MainMenuActivity.getRows();
+        for (int xx = 0; xx < ROWS; xx++) {
+            for (int yy = 0; yy < ROWS; yy++) {
+                int sX = startingX + gridWidth + (cellSize + gridWidth) * xx;
+                int eX = sX + cellSize;
+                int sY = startingY + gridWidth + (cellSize + gridWidth) * yy;
+                int eY = sY + cellSize;
+
+                if(x > sX &&  x < eX  && y > sY && y < eY) {
+                    return game.grid.getCellContent(xx, yy);
+                }
+            }
+        }
+        return null;
     }
 
     private void drawCells(Canvas canvas)
@@ -495,10 +471,8 @@ public class MainView extends View
     private void drawGameOverButtons(Canvas canvas)
     {
         drawNewGameButton(canvas, true);
-        drawTrashButton(canvas, !game.gameWon() && MainActivity.mRewardDeletes > 0 ? true : false);
         drawUndoButton(canvas, true);
-        drawLoadButton(canvas, true);
-        drawSaveButton(canvas, false);
+        //drawHomeButton(canvas);
     }
 
     private void createEndGameStates(Canvas canvas, boolean win, boolean showButton)
@@ -541,12 +515,9 @@ public class MainView extends View
         background = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(background);
         drawHeader(canvas);
-        drawNewGameButton(canvas, false);
-        drawUndoButton(canvas, false);
-        drawTrashButton(canvas, false);
-        drawLoadButton(canvas, true);   // if checking are there a save state or no, is better!
-        drawSaveButton(canvas, true);
-
+        drawHomeButton(canvas);
+        drawNewGameButton(canvas, true);
+        drawUndoButton(canvas, game.canUndo);
         drawBackground(canvas);
         drawBackgroundGrid(canvas);
     }
@@ -625,13 +596,13 @@ public class MainView extends View
     private void getLayout(int width, int height)
     {
         final int ROWS = MainMenuActivity.getRows();
-
+        int standardCellSize = Math.min(width / 5, height / 7);
         cellSize = Math.min(width / (ROWS + 1), height / (ROWS + 3));
         gridWidth = cellSize / (ROWS + 3);  // (ROWS + 3) was 7
         int screenMiddleX = width / 2;
         int screenMiddleY = height / 2;
         int boardMiddleY = screenMiddleY + cellSize / 2;
-        iconSize = cellSize / 2;
+        iconSize = standardCellSize / 2;
 
         //Grid Dimensions
         double halfNumSquaresX = ROWS / 2d;
@@ -682,10 +653,8 @@ public class MainView extends View
 
         sYIcons = (startingY + eYAll) / 2 - iconSize / 2;
         sXNewGame = (endingX - iconSize);
-        sXUndo = sXNewGame - iconSize - iconPaddingSize;
-        sXRemoveTiles = sXUndo - iconSize - iconPaddingSize;
-        sXLoad = sXRemoveTiles - iconSize - iconPaddingSize;
-        sXSave = sXLoad - iconSize - iconPaddingSize;
+        sXUndo = sXNewGame - iconSize - iconPaddingSize * 3;
+        sXHome = startingX;
         resyncTime();
     }
 

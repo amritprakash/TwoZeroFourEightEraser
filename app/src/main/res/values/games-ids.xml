@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!--app_id-->
+    <string name="app_id" translatable="false">337921029381</string>
+    <!--package_name-->
+    <!--achievement Senior-->
+    <string name="achievement_senior" translatable="false">CgkIheqm7eoJEAIQBw</string>
+    <!--achievement Fresher-->
+    <string name="achievement_fresher" translatable="false">CgkIheqm7eoJEAIQCg</string>
+    <!--achievement 8192 at 4x4-->
+    <string name="achievement_8192_at_4x4" translatable="false">CgkIheqm7eoJEAIQAw</string>
+    <!--achievement 4096 at 4x4-->
+    <string name="achievement_4096_at_4x4" translatable="false">CgkIheqm7eoJEAIQAg</string>
+    <!--achievement 2048 at 4x4-->
+    <string name="achievement_2048_at_4x4" translatable="false">CgkIheqm7eoJEAIQAQ</string>
+    <!--achievement 1024 at 4x4-->
+    <string name="achievement_1024_at_4x4" translatable="false">CgkIheqm7eoJEAIQCQ</string>
+    <!--achievement 8192 at 5x5-->
+    <string name="achievement_8192_at_5x5" translatable="false">CgkIheqm7eoJEAIQBQ</string>
+    <!--achievement 4096 at 5x5-->
+    <string name="achievement_4096_at_5x5" translatable="false">CgkIheqm7eoJEAIQBA</string>
+    <!--achievement 2048 at 5x5-->
+    <string name="achievement_2048_at_5x5" translatable="false">CgkIheqm7eoJEAIQCA</string>
+    <!--achievement 2048 at 6x6-->
+    <string name="achievement_2048_at_6x6" translatable="false">CgkIheqm7eoJEAIQBg</string>
+    <!--leaderboard 4x4-->
+    <string name="leaderboard_4x4" translatable="false">CgkIheqm7eoJEAIQCw</string>
+    <!--leaderboard 5x5-->
+    <string name="leaderboard_5x5" translatable="false">CgkIheqm7eoJEAIQDA</string>
+    <!--leaderboard 6x6-->
+    <string name="leaderboard_6x6" translatable="false">CgkIheqm7eoJEAIQDQ</string>
+</resources>

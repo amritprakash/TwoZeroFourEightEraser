@@ -3,11 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1135" />
         <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/background_rectangle.xml" value="0.156" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/baseline_home_24.xml" value="0.1215" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/cell_rectangle.xml" value="0.156" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/cell_rectangle_2048.xml" value="0.1535" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/fade_rectangle.xml" value="0.156" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/ic_baseline_apps_24.xml" value="0.1135" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1135" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1535" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/ic_outline_thumb_up_24.xml" value="0.156" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/light_up_rectangle.xml" value="0.156" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/outline_emoji_events_24.xml" value="0.1135" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/outline_leaderboard_24.xml" value="0.1135" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/drawable/round_corner_background.xml" value="0.1535" />
         <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/layout/activity_color_picker.xml" value="0.13541666666666666" />
-        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/layout/activity_game.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/layout/activity_main_menu.xml" value="0.21458333333333332" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/layout/activity_game.xml" value="0.25" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/layout/activity_main_menu.xml" value="0.25" />
         <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/menu/menus.xml" value="0.2546875" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1215" />
+        <entry key="..\:/Users/as893423/AndroidStudioProjects/TwoZeroFourEightEraser/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1215" />
       </map>
     </option>
   </component>
