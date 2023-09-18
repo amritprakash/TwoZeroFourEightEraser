@@ -10,4 +10,7 @@
     <string name="size_4x4" translatable="false">4x4</string>
     <string name="size_5x5" translatable="false">5x5</string>
     <string name="size_6x6" translatable="false">6x6</string>
+
+    <string name="play_store_uri">https://play.google.com/store/apps/dev?id=5980238475086246229</string>
+
 </resources>

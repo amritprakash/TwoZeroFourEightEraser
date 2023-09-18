@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <data>
 
@@ -8,8 +10,7 @@
                     type="com.pridhi.twoZeroFourEightEraser.databinding.MainHandlers" />
         </data>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/activity_main_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,21 +18,50 @@
     android:orientation="vertical"
     tools:context="com.pridhi.twoZeroFourEightEraser.MainMenuActivity">
 
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/_app_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:textColor="@color/text_black"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/btn_start_5x5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/erase_help"
+            android:textColor="@color/text_black"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
         <ImageButton
             android:id="@+id/btn_settings"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/cell_rectangle_16"
+            android:background="@drawable/cell_rectangle_2048"
+            app:srcCompat="@drawable/slideme"
             android:contentDescription="@string/settings"
+            android:cropToPadding="true"
             android:onClick="@{handler::onButtonClick}"
-            android:padding="16dp"
             android:scaleType="fitCenter"
+            android:padding="2dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_start_4x4"
             app:layout_constraintEnd_toEndOf="@+id/btn_start_4x4"
-            app:layout_constraintStart_toStartOf="@+id/btn_start_4x4"
-            app:srcCompat="@drawable/ic_baseline_settings_24"
-            app:tint="@android:color/white" />
+            app:layout_constraintStart_toStartOf="@+id/btn_start_4x4" />
 
         <ImageButton
             android:id="@+id/btn_show_achievements"
@@ -54,7 +84,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/cell_rectangle_2"
+            android:background="@drawable/cell_rectangle_16"
             android:contentDescription="@string/other_games"
             android:onClick="@{handler::onButtonClick}"
             android:padding="16dp"
@@ -81,32 +111,21 @@
             app:srcCompat="@drawable/outline_leaderboard_24"
             app:tint="@android:color/white" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/_app_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/btn_start_5x5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <Button
             android:id="@+id/btn_start_4x4"
+            style="?attr/materialIconButtonFilledStyle"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerVertical="true"
             android:layout_weight="1"
             android:background="@drawable/cell_rectangle_2048"
             android:onClick="@{handler::onButtonClick}"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="@string/size_4x4"
             android:textAlignment="center"
-            android:textAllCaps="false"
             android:textColor="@color/text_white"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,6 +134,7 @@
 
         <Button
             android:id="@+id/btn_start_5x5"
+            style="?attr/materialIconButtonFilledStyle"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerHorizontal="true"
@@ -124,16 +144,18 @@
             android:layout_weight="1"
             android:background="@drawable/cell_rectangle_256"
             android:onClick="@{handler::onButtonClick}"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="@string/size_5x5"
             android:textAlignment="center"
-            android:textAllCaps="false"
             android:textColor="@color/text_white"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/btn_start_4x4"
             app:layout_constraintEnd_toStartOf="@+id/btn_start_4x4" />
 
         <Button
             android:id="@+id/btn_start_6x6"
+            style="?attr/materialIconButtonFilledStyle"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerVertical="true"
@@ -142,11 +164,12 @@
             android:layout_weight="1"
             android:background="@drawable/cell_rectangle_128"
             android:onClick="@{handler::onButtonClick}"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="@string/size_6x6"
             android:textAlignment="center"
-            android:textAllCaps="false"
             android:textColor="@color/text_white"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/btn_start_4x4"
             app:layout_constraintStart_toEndOf="@+id/btn_start_4x4" />
 

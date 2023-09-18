@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">2048</string>
+    <string name="app_name">2048E</string>
     <string name="header">2048</string>
     <string name="high_score">HIGH SCORE</string>
     <string name="score">SCORE</string>
@@ -12,15 +12,18 @@
 
     <!-- Confirmation dialog-->
     <string name="reset">Reset</string>
+    <string name="ok">Ok</string>
     <string name="continue_game">Cancel</string>
-    <string name="reset_dialog_title">Reset game</string>
+    <string name="reset_dialog_title">Reset game?</string>
+    <string name="erase_dialog_title">Remove a tile!</string>
+    <string name="erase_dialog_message">Hold your finger on a tile to remove/delete it.</string>
     <string name="reset_dialog_message">Are you sure you wish to reset the game?</string>
 
     <!-- Share Intro -->
     <string name="share_title">Share 2048 using</string>
 
     <!-- Trash -->
-    <string name="tiles_are_not_enough_to_remove">Tiles are very few to erase!</string>
+    <string name="tiles_are_not_enough_to_remove">Tiles are very few to remove!</string>
 
     <!-- Menu Items -->
     <string name="achievements">Achievements</string>
@@ -30,5 +33,6 @@
     <string name="rate_us">Rate 2048</string>
     <string name="share_2048">Share with friends</string>
 
-    <string name="_app_name">2048 Eraser</string>
+    <string name="_app_name">2048E</string>
+    <string name="erase_help">Long press a tile to erase and get to 2048 and beyond!</string>
 </resources>

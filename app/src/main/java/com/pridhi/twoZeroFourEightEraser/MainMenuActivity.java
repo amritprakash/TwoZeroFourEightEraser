@@ -6,6 +6,7 @@ import static com.pridhi.twoZeroFourEightEraser.R.id.btn_rate;
 import static com.pridhi.twoZeroFourEightEraser.R.id.btn_share;
 import static com.pridhi.twoZeroFourEightEraser.R.id.btn_show_achievements;
 import static com.pridhi.twoZeroFourEightEraser.R.id.btn_show_leaderboards;
+import static com.pridhi.twoZeroFourEightEraser.R.id.btn_settings;
 import static com.pridhi.twoZeroFourEightEraser.R.id.btn_start_4x4;
 import static com.pridhi.twoZeroFourEightEraser.R.id.btn_start_5x5;
 import static com.pridhi.twoZeroFourEightEraser.R.id.btn_start_6x6;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.ads.AdRequest;
@@ -31,6 +33,8 @@ import com.google.android.gms.games.GamesSignInClient;
 import com.google.android.gms.games.PlayGames;
 import com.pridhi.twoZeroFourEightEraser.databinding.ActivityMainMenuBinding;
 import com.pridhi.twoZeroFourEightEraser.databinding.MainHandlers;
+
+import java.util.Objects;
 
 public class MainMenuActivity extends AppCompatActivity implements MainHandlers {
     public static boolean mIsMainMenu = true;
@@ -54,6 +58,7 @@ public class MainMenuActivity extends AppCompatActivity implements MainHandlers 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main_menu);
         binding.setHandler(this);
@@ -114,7 +119,6 @@ public class MainMenuActivity extends AppCompatActivity implements MainHandlers 
         PlayGames.getLeaderboardsClient(this).getAllLeaderboardsIntent().addOnSuccessListener(intent -> activityResultLauncher.launch(intent));
     }
 
-    @SuppressWarnings("unused")
     @Override
     public void onButtonClick(View view) {
         if (view.getId() == btn_start_4x4) {
@@ -135,25 +139,33 @@ public class MainMenuActivity extends AppCompatActivity implements MainHandlers 
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string._app_name));
-            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hey Friends Checkout This Interesting Game " + playStoreUri + "/details?id=co.amrit.bubbler");
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hey Friends Checkout This Interesting Game " + playStoreUri + "/details?id=com.pridhi.twoZeroFourEightEraser");
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)));
 
         } else if (view.getId() == btn_more_games) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://play.google.com/store/search?q=pub:MolZol"));
+                intent.setData(Uri.parse(getString(R.string.play_store_uri)));
                 startActivity(intent);
             } catch (Exception e) {
-                Log.d("TAG", e.getMessage());
+                Log.d("TAG", Objects.requireNonNull(e.getMessage()));
+            }
+        } else if (view.getId() == btn_settings) {
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(playStoreUri + "/details?id=" + "io.paridhi.slide.slideme"));
+                startActivity(intent);
+            } catch (Exception e) {
+                Log.d("TAG", Objects.requireNonNull(e.getMessage()));
             }
         } else if (view.getId() == btn_rate) {
-            final Uri uri = Uri.parse(playStoreUri + "/details?id=" + "co.amrit.bubbler");
+            final Uri uri = Uri.parse(playStoreUri + "/details?id=" + "com.pridhi.twoZeroFourEightEraser");
             Intent rateAppIntent = new Intent(Intent.ACTION_VIEW, uri);
             try {
                 startActivity(rateAppIntent);
             } catch (Exception e) // for activity not found exception
             {
-                Log.d("TAG", e.getMessage());
+                Log.d("TAG", Objects.requireNonNull(e.getMessage()));
             }
         }
     }

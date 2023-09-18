@@ -2,6 +2,7 @@ package com.pridhi.twoZeroFourEightEraser;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -36,13 +37,10 @@ public class MainGame {
     public AnimationGrid aGrid;
     public boolean canUndo;
     private int undoClickCount = 0;
-    private int eraseCount = 1;
     public long score = 0;
     public long highScore = 0;
     public long lastScore = 0;
     private long bufferScore = 0;
-    private int newGameCount = 0;
-
     public MainGame(Context context, MainView view) {
         mContext = context;
         mView = view;
@@ -50,9 +48,9 @@ public class MainGame {
     }
 
     public void restartGame() {
-        if (newGameCount++ % 3 == 0) {
+        //if (newGameCount++ % 1 == 0) {
             mView.mActivity.showInterstitial();
-        }
+        //}
         newGame();
     }
 
@@ -143,7 +141,7 @@ public class MainGame {
 
     public void revertUndoState() {
         if (canUndo) {
-            if (undoClickCount++ % 3 == 0) {
+            if (undoClickCount++ % 2 == 0) {
                 mView.mActivity.showInterstitial();
             }
             canUndo = false;
@@ -157,7 +155,7 @@ public class MainGame {
     }
 
     public void goToHome() {
-        mView.mActivity.showInterstitial();
+        //mView.mActivity.showInterstitial();
         mView.mActivity.finish();
     }
 
@@ -178,7 +176,7 @@ public class MainGame {
             return;
         }
         final int rows = MainMenuActivity.getRows();
-        if (mView.game.grid.getAvailableCells().size() == rows * rows - 1) {
+        if (mView.game.grid.getAvailableCells().size() == rows * rows - 3) {
             mView.game.makeToast(R.string.tiles_are_not_enough_to_remove);
             return;
         }
@@ -186,13 +184,14 @@ public class MainGame {
         if (tile == null) {
             return;
         }
-        if (eraseCount++ % 3 == 0) {
+//        if (eraseCount++ % 1 == 0) {
             mView.mActivity.showRewarded();
-        }
+//        }
 
         prepareUndoState();
         saveUndoState();
-
+        Vibrator vb = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(25);
         grid.removeTile(tile);
         mView.invalidate();
     }

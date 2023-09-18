@@ -35,6 +35,8 @@ public class MainView extends View {
     public int sYIcons;
     public int sXNewGame;
     public int sXUndo;
+
+    public int sXErase;
     public int sXHome;
     public int iconSize;
     //Misc
@@ -252,6 +254,18 @@ public class MainView extends View {
                 sYIcons + iconSize - iconPaddingSize);
     }
 
+    private void drawEraseButton(Canvas canvas) {
+        drawDrawable(canvas, lightUpRectangle, sXErase, sYIcons,
+                sXErase + iconSize,
+                sYIcons + iconSize);
+
+        drawDrawable(canvas, getDrawable(R.drawable.sel_delete),
+                sXErase + iconPaddingSize,
+                sYIcons + iconPaddingSize,
+                sXErase + iconSize - iconPaddingSize,
+                sYIcons + iconSize - iconPaddingSize);
+    }
+
     private void drawUndoButton(Canvas canvas, boolean lightUp) {
         if (lightUp)
             drawDrawable(canvas, lightUpRectangle, sXUndo, sYIcons,
@@ -422,7 +436,7 @@ public class MainView extends View {
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setTextSize(bodyTextSize);
         paint.setColor(getResources().getColor(R.color.text_black));
-        canvas.drawText(getResources().getString(R.string.endless), startingX, sYIcons - centerText() * 2, paint);
+        canvas.drawText(getResources().getString(R.string.endless), startingX, sYAll, paint);
     }
 
     private void drawGameOverButtons(Canvas canvas) {
@@ -469,6 +483,7 @@ public class MainView extends View {
         drawHomeButton(canvas);
         drawNewGameButton(canvas);
         drawUndoButton(canvas, game.canUndo);
+        drawEraseButton(canvas);
         drawBackground(canvas);
         drawBackgroundGrid(canvas);
     }
@@ -561,31 +576,32 @@ public class MainView extends View {
         // Text Dimensions
         paint.setTextSize(cellSize);
         textSize = cellSize * cellSize / Math.max(cellSize, paint.measureText("0000"));
-
+        paint.setTextSize(standardCellSize);
+        float fixedTextSize = standardCellSize * standardCellSize / Math.max(standardCellSize, paint.measureText("0000"));
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(1000);
 
         gameOverTextSize = Math.min(
                 Math.min(
                         1000f * ((widthWithPadding - gridWidth * 2) / (paint.measureText(getResources().getString(R.string.game_over)))),
-                        textSize * 2
+                        fixedTextSize * 2
                 ),
                 1000f * ((widthWithPadding - gridWidth * 2) / (paint.measureText(getResources().getString(R.string.you_win))))
         );
 
-        paint.setTextSize(cellSize);
+        paint.setTextSize(standardCellSize);
         cellTextSize = textSize;
-        titleTextSize = textSize / 3;
-        bodyTextSize = (int) (textSize / 1.5);
-        headerTextSize = textSize * 2;
-        textPaddingSize = (int) (textSize / 3);
-        iconPaddingSize = (int) (textSize / 5);
+        titleTextSize = fixedTextSize / 3;
+        bodyTextSize = (int) (fixedTextSize / 1.5);
+        headerTextSize = fixedTextSize * 2;
+        textPaddingSize = (int) (fixedTextSize / 3);
+        iconPaddingSize = (int) (fixedTextSize / 5);
 
         paint.setTextSize(titleTextSize);
 
         int textShiftYAll = centerText();
         //static variables
-        sYAll = (int) (startingY - cellSize * 1.5);
+        sYAll = (int) (startingY - standardCellSize * 1.5);
         titleStartYAll = (int) (sYAll + textPaddingSize + titleTextSize / 2 - textShiftYAll);
         bodyStartYAll = (int) (titleStartYAll + textPaddingSize + titleTextSize / 2 + bodyTextSize / 2);
 
@@ -598,6 +614,7 @@ public class MainView extends View {
         sYIcons = (startingY + eYAll) / 2 - iconSize / 2;
         sXNewGame = (endingX - iconSize);
         sXUndo = sXNewGame - iconSize - iconPaddingSize * 3;
+        sXErase = sXUndo - iconSize - iconPaddingSize * 3;
         sXHome = startingX;
         resyncTime();
     }

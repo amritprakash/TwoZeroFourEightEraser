@@ -1,13 +1,13 @@
 package com.pridhi.twoZeroFourEightEraser;
 
-import android.app.AlertDialog;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 class InputListener implements View.OnTouchListener {
-    private static final int SWIPE_MIN_DISTANCE = 0;
+    private static final int SWIPE_MIN_DISTANCE = 2;
     private static final int SWIPE_THRESHOLD_VELOCITY = 25;
     private static final int MOVE_THRESHOLD = 250;
     private static final int RESET_STARTING = 10;
@@ -31,7 +31,6 @@ class InputListener implements View.OnTouchListener {
         public void run() {
             goneFlag = true;
             mView.game.removeTile(x, y);
-            Log.d("TAG", "Amrit");
         }
     };
 
@@ -45,7 +44,7 @@ class InputListener implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 goneFlag = false;
-                handler.postDelayed(mLongPressed, 1000);
+                handler.postDelayed(mLongPressed, 800);
                 x = event.getX();
                 y = event.getY();
                 startingX = x;
@@ -84,18 +83,20 @@ class InputListener implements View.OnTouchListener {
                         lastDy = dy;
                     }
                     if (pathMoved() > SWIPE_MIN_DISTANCE * SWIPE_MIN_DISTANCE && !hasMoved) {
-                        handler.removeCallbacks(mLongPressed);
+
                         boolean moved = false;
                         //Vertical
                         if (((dy >= SWIPE_THRESHOLD_VELOCITY && Math.abs(dy) >= Math.abs(dx)) || y - startingY >= MOVE_THRESHOLD) && previousDirection % 2 != 0) {
                             moved = true;
                             previousDirection = previousDirection * 2;
                             veryLastDirection = 2;
+                            handler.removeCallbacks(mLongPressed);
                             mView.game.move(2);
                         } else if (((dy <= -SWIPE_THRESHOLD_VELOCITY && Math.abs(dy) >= Math.abs(dx)) || y - startingY <= -MOVE_THRESHOLD) && previousDirection % 3 != 0) {
                             moved = true;
                             previousDirection = previousDirection * 3;
                             veryLastDirection = 3;
+                            handler.removeCallbacks(mLongPressed);
                             mView.game.move(0);
                         }
                         //Horizontal
@@ -103,11 +104,13 @@ class InputListener implements View.OnTouchListener {
                             moved = true;
                             previousDirection = previousDirection * 5;
                             veryLastDirection = 5;
+                            handler.removeCallbacks(mLongPressed);
                             mView.game.move(1);
                         } else if (((dx <= -SWIPE_THRESHOLD_VELOCITY && Math.abs(dx) >= Math.abs(dy)) || x - startingX <= -MOVE_THRESHOLD) && previousDirection % 7 != 0) {
                             moved = true;
                             previousDirection = previousDirection * 7;
                             veryLastDirection = 7;
+                            handler.removeCallbacks(mLongPressed);
                             mView.game.move(3);
                         }
                         if (moved) {
@@ -128,7 +131,7 @@ class InputListener implements View.OnTouchListener {
                 handler.removeCallbacks(mLongPressed);
                 if (!hasMoved && !goneFlag) {
                     if (iconPressed(mView.sXNewGame, mView.sYIcons)) {
-                        new AlertDialog.Builder(mView.getContext())
+                        new MaterialAlertDialogBuilder(mView.getContext())
                                 .setPositiveButton(R.string.reset, (dialog, which) -> {
                                     // reset rewards again:
                                     MainActivity.mRewardDeletes = 2;
@@ -140,12 +143,20 @@ class InputListener implements View.OnTouchListener {
                                 .setNegativeButton(R.string.continue_game, null)
                                 .setTitle(R.string.reset_dialog_title)
                                 .setMessage(R.string.reset_dialog_message)
+                                .setIcon(R.drawable.ic_action_refresh)
                                 .show();
                     } else if (iconPressed(mView.sXUndo, mView.sYIcons)) {
                         mView.game.revertUndoState();
                     } else if (iconPressed(mView.sXHome, mView.sYIcons)) {
                         mView.game.goToHome();
-                    } else if (isTap(2) && inRange(mView.startingX, x, mView.endingX)
+                    } else if (iconPressed(mView.sXErase, mView.sYIcons))  {
+                        new MaterialAlertDialogBuilder(mView.getContext())
+                                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.cancel())
+                                .setTitle(R.string.erase_dialog_title)
+                                .setMessage(R.string.erase_dialog_message)
+                                .setIcon(R.drawable.sel_delete_ligthup)
+                                .show();
+                    }else if (isTap(2) && inRange(mView.startingX, x, mView.endingX)
                             && inRange(mView.startingY, x, mView.endingY) && mView.continueButtonEnabled) {
                         mView.game.setEndlessMode();
                     }
