@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadInterstitial() {
         AdRequest interstitialAdRequest = new AdRequest.Builder().build();
-        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", interstitialAdRequest,
+        InterstitialAd.load(this, "ca-app-pub-7987038464914684/6026315043", interstitialAdRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadRewarded() {
         AdRequest rewardedAdRequest = new AdRequest.Builder().build();
-        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917", rewardedAdRequest,
+        RewardedAd.load(this, "ca-app-pub-7987038464914684/4556787870", rewardedAdRequest,
                 new RewardedAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
